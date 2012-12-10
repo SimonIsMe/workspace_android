@@ -1,0 +1,19 @@
+package com.example.lista4_1;
+
+import java.util.TimerTask;
+
+import android.util.Log;
+
+
+public class TT extends TimerTask {
+
+	@Override
+	public void run() {
+		Log.i("moje", "##############");
+	}
+	
+	public void stop() {
+		this.cancel()
+	}
+	
+}

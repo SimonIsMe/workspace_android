@@ -1,0 +1,72 @@
+package com.example.lista4_1;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import android.app.Service;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.IBinder;
+import android.util.Log;
+
+
+public class MakePointBigger extends Service {
+
+	private Timer timer;
+	private TT update;
+	
+	public MakePointBigger() {
+		this.timer = new Timer();
+	}
+	
+	public IBinder onBind(Intent intent) {
+		return null;
+	}
+
+	public void start() {
+		this.update = new TT();
+		this.timer.scheduleAtFixedRate(update, 0, 500);
+	}
+
+	public void stop() {
+		Log.i("moje", "stoppp");
+		try {
+		} catch (Exception e) {
+			Log.e("moje", e.toString());
+		}
+		this.timer.cancel();
+		this.timer.purge();
+	}
+	
+	
+	
+}
+
+
+//public class MakePointBigger extends AsyncTask {
+//
+//	public int number;
+//	public boolean stop;
+//	public Draw2d d;
+//
+//	@Override
+//	protected Object doInBackground(Object... params) {
+//		int i = 1;
+//		float radius = 0;
+//		while (!this.stop) {
+//			try {
+////				radius = ((i * 40)) / 20;
+//				radius = 100;
+//				Log.i("moje", "radius: " + i + "|" + radius + " " + this.number);
+//				d.makePointBigger(this.number, radius);
+//				Thread.sleep(10);
+//				i++;
+//			} catch (Exception e) {
+//				
+//			}
+//		}
+//		return null;
+//	}
+//
+//	
+//}

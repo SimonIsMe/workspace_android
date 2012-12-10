@@ -1,0 +1,88 @@
+package com.example.lista5;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+
+public class ListOfPeople extends Activity {
+	
+	private TextView[] fullNames = new TextView[3];
+	private TextView[] dates = new TextView[3];;
+	
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_list_of_people);
+        
+        int count = 3;
+        
+        this.fullNames[0] = (TextView) findViewById(R.id.fullName0);
+        this.fullNames[1] = (TextView) findViewById(R.id.fullName1);
+        this.fullNames[2] = (TextView) findViewById(R.id.fullName2);
+        this.dates[0] = (TextView) findViewById(R.id.date0);
+        this.dates[1] = (TextView) findViewById(R.id.date1);
+        this.dates[2] = (TextView) findViewById(R.id.date2);
+        
+        for (int i = 0; i < count; i++) {
+        	this.fullNames[i].setVisibility(View.GONE);
+        	this.dates[i].setVisibility(View.GONE);
+        	this.fullNames[i].setClickable(true);
+        	this.fullNames[i].setOnClickListener()
+        }
+        
+        SQLiteDatabase database = this.openOrCreateDatabase(
+        		"baza",
+        		SQLiteDatabase.CREATE_IF_NECESSARY,
+        		null);
+        database.execSQL("CREATE TABLE IF NOT EXISTS people (" +
+        		"pid INTEGER PRIMARY KEY AUTOINCREMENT," +
+        		"name TEXT," +
+        		"surname TEXT," +
+        		"birth TEXT);");
+        database.execSQL("CREATE TABLE IF NOT EXISTS notes (" +
+        		"nid INTEGER PRIMARY KEY AUTOINCREMENT," +
+        		"text TEXT," +
+        		"pid INTEGER NOT NULL CONSTRAINT pid REFERENCES people(pid) ON DELETE CASCADE );");
+        
+        Cursor c = database.query("people", null, null, null, null, null, null);
+        c.moveToFirst();
+        
+        int i = 0;
+        while (c.isAfterLast() == false) {
+        	Log.i("moje", c.getString(0) + " " + c.getString(1) + " " + c.getString(2) + " " + c.getString(3));
+        	this.fullNames[i].setText(c.getString(1) + " " + c.getString(2));
+        	this.dates[i].setText(c.getString(3));
+        	this.fullNames[i].setVisibility(View.VISIBLE);
+        	this.dates[i].setVisibility(View.VISIBLE);
+        	i++;
+        	c.moveToNext();
+        }
+        
+        
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_list_of_people, menu);
+        return true;
+    }
+    
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch (item.getItemId()) {
+    		case R.id.item1:
+    			Intent myIntent = 
+    					new Intent(getApplicationContext(), AddPerson.class);
+    				startActivityForResult(myIntent, 0);
+    			break;
+    	}
+		return false;
+    }
+}
+

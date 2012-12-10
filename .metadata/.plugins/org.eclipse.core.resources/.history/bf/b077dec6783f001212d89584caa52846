@@ -1,0 +1,25 @@
+package com.example.lista4_1;
+
+import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.os.Bundle;
+import android.view.Menu;
+
+public class Circles extends Activity {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.circles);
+        
+        Draw2d d = new Draw2d(this);
+        this.setContentView(d);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.circles, menu);
+        return true;
+    }
+}

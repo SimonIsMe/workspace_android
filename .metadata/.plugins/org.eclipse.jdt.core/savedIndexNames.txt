@@ -1,0 +1,7 @@
+INDEX VERSION 1.126+/home/szymon/workspace/workspace_android/.metadata/.plugins/org.eclipse.jdt.core
+916477288.index
+1208358939.index
+2807194895.index
+2338630037.index
+2103412432.index
+778879737.index

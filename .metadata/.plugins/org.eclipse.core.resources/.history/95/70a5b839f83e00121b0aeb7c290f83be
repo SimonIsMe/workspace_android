@@ -1,0 +1,127 @@
+package com.example.lista3;
+
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import android.app.Service;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
+import android.os.IBinder;
+import android.util.Log;
+import android.view.View;
+
+public class BluetoothService extends Service {
+
+	private Timer updatingTimer;
+	private TimerTask task;
+
+	/**Sprawdza, stan bluetootha i wykonuje odopwiednią akcję
+	 * @param void
+	 * @return void
+	 * */
+	static public void checkBluetoothState() {
+		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
+				.getDefaultAdapter();
+
+		if (mBluetoothAdapter == null) {
+			Blutooth.bluetoothTitle
+				.setText("Bluetooth is not detected");
+			return;
+		}
+		
+		switch (mBluetoothAdapter.getState()) {
+		case BluetoothAdapter.STATE_TURNING_OFF:
+			disableMenu();
+			removeListOfDevices();
+			Blutooth.bluetoothTitle
+				.setText("Bluetooth is turning off");
+			break;
+		case BluetoothAdapter.STATE_TURNING_ON:
+			disableMenu();
+			removeListOfDevices();
+			Blutooth.bluetoothTitle
+				.setText("Bluetooth is turning on");
+			break;
+		case BluetoothAdapter.STATE_ON:
+			createListOfDevices();
+			enableMenu();
+			Blutooth.bluetoothTitle.setText("Bluetooth is on");
+			break;
+		case BluetoothAdapter.STATE_OFF:
+			enableMenu();
+			removeListOfDevices();
+			Blutooth.bluetoothTitle.setText("Bluetooth is off");
+			break;
+		default:
+			break;
+		}
+	}
+
+	static public void enableMenu() {
+		if (Blutooth.onOff != null) {
+			Blutooth.onOff.setEnabled(true);
+			Blutooth.refresh.setEnabled(true);
+		}
+	}
+
+	static public void disableMenu() {
+		if (Blutooth.onOff != null) {
+			Blutooth.onOff.setEnabled(false);
+			Blutooth.refresh.setEnabled(false);
+		}
+	}
+
+	/**Tworzy listę z urządzeniami
+	 * @param Intent intent
+	 * @return void
+	 * */
+	static public void createListOfDevices(Intent intent) {
+		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
+				.getDefaultAdapter();
+
+		Set<BluetoothDevice> pairedDevices = mBluetoothAdapter
+				.getBondedDevices();
+		hideListElements();
+		
+		String action = intent.getAction();
+        BluetoothDevice deviceConnected = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+        
+        Log.i("moje", action);
+        Log.i("moje", action.equals("android.bluetooth.device.action.ACL_CONNECTED") + " connected");
+        Log.i("moje", action.equals("android.bluetooth.device.action.ACL_DISCONNECTED") + " disconnected");
+		
+		if (pairedDevices.size() > 0) {
+			int i = 0;
+			for (BluetoothDevice device : pairedDevices) {
+				Blutooth.name[i].setVisibility(View.VISIBLE);
+				Blutooth.address[i].setVisibility(View.VISIBLE);
+				if (deviceConnected.getAddress().equals(device.getAddress())) {
+					Blutooth.name[i].setText(device.getName() + "");
+				} else {
+					Blutooth.name[i].setText(device.getName());
+				}
+				Blutooth.address[i]
+						.setText(device.getAddress());
+				i++;
+			}
+		}
+	}
+
+	static public void removeListOfDevices() {
+		hideListElements();
+	}
+
+	static public void hideListElements() {
+		for (int i = 0; i < Blutooth.MAX_DEVICES; i++) {
+			Blutooth.name[i].setVisibility(View.GONE);
+			Blutooth.address[i].setVisibility(View.GONE);
+		}
+	}
+
+	public IBinder onBind(Intent intent) {
+		return null;
+	}
+
+}

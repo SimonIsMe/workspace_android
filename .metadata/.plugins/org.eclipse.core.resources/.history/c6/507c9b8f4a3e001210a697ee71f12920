@@ -1,0 +1,100 @@
+package com.example.lista3;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import android.app.Service;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
+import android.os.IBinder;
+import android.util.Log;
+
+public class BluetoothService extends Service {
+
+	private Timer updatingTimer;
+	private TimerTask task;
+	
+	public BluetoothService() {
+		super();
+	}
+
+	public void onCreate() {
+		this.updatingTimer = new Timer();
+		this.task = new TimerTask() {
+		    @Override
+		    public void run() {
+		        BluetoothService.checkBluetoothState();
+		    }
+		};
+		this.checkBluetoothState();
+	}
+	
+	public void onStart(Intent intent, int startid) {
+	    this.updatingTimer.scheduleAtFixedRate(this.task, 0, 500);
+	}
+	
+	public void onDestroy() {
+		this.updatingTimer.cancel();
+		
+		super.onDestroy();
+	}
+	
+	static public void turnOn() {
+		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		mBluetoothAdapter.enable();
+		
+		while(mBluetoothAdapter.getState() == BluetoothAdapter.STATE_TURNING_ON) {
+			Blutooth.bluetoothTitle.setText("Bluetooth is turning on");
+		}
+	}
+	
+	static public void turnOff() {
+		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		mBluetoothAdapter.enable();
+		
+		while(mBluetoothAdapter.getState() == BluetoothAdapter.STATE_TURNING_ON) {
+			Blutooth.bluetoothTitle.setText("Bluetooth is turning off");
+		}
+	}
+	
+	static public void checkBluetoothState() {
+    	BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    	
+    	if (mBluetoothAdapter == null) {
+    		Blutooth.bluetoothTitle.setText("Bluetooth is not detected");
+    		return;
+    	}
+    	
+    	Log.i("moje", "Sprawdzam stan " + mBluetoothAdapter.getState());
+		Intent intent = new Intent(Blutooth.NEW_MSG);
+
+    	switch (mBluetoothAdapter.getState()){
+    		case BluetoothAdapter.STATE_TURNING_OFF:
+    			Log.i("moje", "turning off");
+    			Blutooth.bluetoothTitle.setText("Bluetooth is turning off");
+    			intent.putExtra("ReceiverData", "Bluetooth is turning off");
+    			break;
+    		case BluetoothAdapter.STATE_TURNING_ON:
+    			Log.i("moje", "turning on");
+    			Blutooth.bluetoothTitle.setText("Bluetooth is turning on");
+    			intent.putExtra("ReceiverData", "Bluetooth is turning on");
+    			break;
+    		case BluetoothAdapter.STATE_ON:
+    			Log.i("moje", "is on");
+    			Blutooth.bluetoothTitle.setText("Bluetooth is on");
+    			intent.putExtra("ReceiverData", "Bluetooth is on");
+    			break;
+    		case BluetoothAdapter.STATE_OFF:
+    			Log.i("moje", "is off");
+    			Blutooth.bluetoothTitle.setText("Bluetooth is off");
+    			intent.putExtra("ReceiverData", "Bluetooth is off");
+    			break;
+    	}
+    	sendBroadcast(intent);
+    }
+
+	public IBinder onBind(Intent intent) {
+		return null;
+	}
+	
+}

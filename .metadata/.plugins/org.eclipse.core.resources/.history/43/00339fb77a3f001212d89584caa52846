@@ -1,0 +1,47 @@
+package com.example.lista4_1;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+
+public class Circles extends Activity implements OnTouchListener {
+
+	private int touchTimeStart;
+	
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.circles);
+        
+        Draw2d d = new Draw2d(this);
+        d.setOnTouchListener(this);
+        d.refreshDrawableState();
+        this.setContentView(d);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.circles, menu);
+        return true;
+    }
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		
+		switch (event.getAction()) {
+			case MotionEvent.ACTION_DOWN:
+				this.touchTimeStart = event.getDownTime();
+				break;
+			case MotionEvent.ACTION_UP: 
+				break;
+			case MotionEvent.ACTION_MOVE: 
+				break;
+		}
+		Log.i("moje", event.getX() + " " + event.getY() + " " + event.getDownTime() + " -" + event.get);
+		return false;
+	}
+}

@@ -1,0 +1,59 @@
+package com.example.lista5;
+
+import android.app.Activity;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.View;
+import android.widget.DatePicker;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class AddPerson extends Activity {
+
+	private TextView name;
+	private TextView surname;
+	private DatePicker date;
+	
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_person);
+        
+        this.name = (TextView) this.findViewById(R.id.name);
+        this.surname = (TextView) this.findViewById(R.id.surname);
+        this.date = (DatePicker) this.findViewById(R.id.date);
+        
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_add_person, menu);
+        return true;
+    }
+    
+    public void create(View view) {
+    	
+    	SQLiteDatabase database = this.openOrCreateDatabase(
+        		"baza",
+        		SQLiteDatabase.CREATE_IF_NECESSARY,
+        		null);
+    	
+    	ContentValues values = new ContentValues();
+    	values.put("name", this.name.getText().toString());
+    	values.put("surname", this.surname.getText().toString());
+    	values.put("birth", this.date.getDayOfMonth() + "-" + this.date.getMonth() + "-" + this.date.getYear());
+    	database.insert("people", null, values);
+    	
+    	CharSequence text = "Saved";
+    	int duration = Toast.LENGTH_SHORT;
+
+    	Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+    	toast.show();
+    	
+    	this.name.setText("");
+    	this.surname.setText("");
+    	
+    }
+}

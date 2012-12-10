@@ -1,0 +1,4 @@
+<menu>
+    <item android:id="@+id/edit_the_person" android:title="@string/edit_the_person" android:orderInCategory="100" ></item>
+    <item android:id="@+id/remove_the_person" android:title="@string/remove_the_person" android:orderInCategory="100" ></item>
+</menu>

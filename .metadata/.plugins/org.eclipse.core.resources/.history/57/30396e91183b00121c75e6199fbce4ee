@@ -1,0 +1,52 @@
+package com.example.lista3;
+
+import java.util.Set;
+
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.widget.TextView;
+
+public class Blutooth extends Activity {
+	
+	private TextView bluetoothTitle;
+	
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.blutooth);
+        
+        this.bluetoothTitle = (TextView) findViewById(R.id.bluetooth_title);
+        
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        
+        if ()
+        	Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+        	if (pairedDevices.size() > 0) {
+        	    // Loop through paired devices
+        	    for (BluetoothDevice device : pairedDevices) {
+        	        // Add the name and address to an array adapter to show in a ListView
+//        	        mArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+        	        Log.i("moje", device.getName() + " | " + device.getAddress());
+        	    }
+        	}
+    }
+    
+    private void checkBluetoothState() {
+    	BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    	if (!mBluetoothAdapter.isEnabled()) {
+        	bluetoothTitle.setText("Bluetooth is off");
+        } else {
+        	bluetoothTitle.setText("Bluetooth is on");
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.blutooth, menu);
+        return true;
+    }
+}

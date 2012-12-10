@@ -1,0 +1,30 @@
+package com.example.lista4_1;
+
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.view.View;
+
+public class Draw2d extends View {
+
+	public Draw2d(Context context) {
+        super(context);
+    }
+	
+    protected void onDraw(Canvas c){
+    	Paint paint = new Paint();
+    	paint.setStyle(Paint.Style.FILL);
+
+    	// make the entire canvas white
+    	paint.setColor(Color.WHITE);
+    	c.drawPaint(paint);
+    	
+    	paint.setColor(Color.GREEN);
+    	c.drawCircle(100, 100, 50, paint);
+    	
+	  	super.onDraw(c);
+	}
+
+	
+}

@@ -1,0 +1,99 @@
+package com.example.lista3;
+
+import java.util.Set;
+
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+
+public class Blutooth extends Activity {
+	
+	private TextView bluetoothTitle;
+	
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.blutooth);
+        
+        this.startService(new Intent(this, BluetoothService.class));
+        
+        this.bluetoothTitle = (TextView) findViewById(R.id.bluetooth_title);
+        
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        
+        this.checkBluetoothState();
+        
+        if (mBluetoothAdapter.isEnabled()) {
+        	Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+        	if (pairedDevices.size() > 0) {
+        	    // Loop through paired devices
+        	    for (BluetoothDevice device : pairedDevices) {
+        	        // Add the name and address to an array adapter to show in a ListView
+        	    	Log.i("moje", device.getName() + " | " + device.getAddress());
+        	    }
+        	}
+        }
+    }
+    
+    //	TODO
+    private void checkBluetoothState() {
+    	BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    	
+    	if (mBluetoothAdapter == null) {
+    		bluetoothTitle.setText(title + "not detected");
+    		return;
+    	}
+    	
+    	switch (mBluetoothAdapter.getState()){
+    		case BluetoothAdapter.STATE_TURNING_OFF:
+    			bluetoothTitle.setText(title + "turning off");
+    			break;
+    		case BluetoothAdapter.STATE_TURNING_ON:
+    			bluetoothTitle.setText(title + "turning on");
+    			break;
+    		case BluetoothAdapter.STATE_ON:
+    			bluetoothTitle.setText(title + "on");
+    			break;
+    		case BluetoothAdapter.STATE_OFF:
+    			bluetoothTitle.setText(title + "on");
+    			break;
+    	}
+    }
+    
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        switch (item.getItemId()) {
+        	case R.id.menu_bluetooth_on_off:
+        		if (mBluetoothAdapter.isEnabled()) {
+        			mBluetoothAdapter.disable();
+        		} else {
+        			mBluetoothAdapter.enable();
+        		}
+        		this.checkBluetoothState();
+        		break;
+        	case R.id.menu_switch_on_wifi:
+        		View view = this.getCurrentFocus();
+        		Intent myIntent = new Intent(getApplicationContext(), WiFi.class);
+                startActivityForResult(myIntent, 0);
+        		break;
+        }
+    	return true;
+    }
+    
+    public void click(View view){
+    	
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.blutooth, menu);
+        return true;
+    }
+}

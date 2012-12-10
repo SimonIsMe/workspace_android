@@ -1,0 +1,108 @@
+package com.example.lista4_1;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.util.Log;
+import android.view.View;
+
+public class Draw2d extends View {
+
+	private ArrayList<Integer> points_x;
+	private ArrayList<Integer> points_y;
+	private ArrayList<Float> radius;
+	private ArrayList<Integer> color;
+	private ArrayList<Long> time;
+	public boolean stop = false;
+	
+	public Draw2d(Context context) {
+        super(context);
+        this.points_x = new ArrayList<Integer>();
+        this.points_y = new ArrayList<Integer>();
+        this.radius = new ArrayList<Float>();
+        this.color = new ArrayList<Integer>();
+        this.time = new ArrayList<Long>();
+    }
+	
+    @SuppressLint("DrawAllocation")
+	protected void onDraw(Canvas c){
+    	
+    	Log.i("moje", "onDraw()");
+    	
+    	Paint paint = new Paint();
+    	paint.setStyle(Paint.Style.FILL);
+
+    	// make the entire canvas white
+    	paint.setColor(Color.WHITE);
+    	c.drawPaint(paint);
+    	
+    	for (int i = 0; i < points_x.size(); i++) {
+    		paint.setColor(this.color.get(i));
+    		Log.i("moje", "### " + this.radius.get(i));
+    		c.drawCircle(this.points_x.get(i), this.points_y.get(i), this.radius.get(i), paint);
+    	}
+    	
+	  	super.onDraw(c);
+	}
+
+	public int addPoint(float x, float y) {
+		points_x.add((int) x);
+		points_y.add((int) y);
+		radius.add((float) 10);
+		String color = "";
+		Random random = new Random();
+		Integer[] avalibleColors = new Integer[5];
+		avalibleColors[0] = Color.BLUE;
+		avalibleColors[1] = Color.CYAN;
+		avalibleColors[2] = Color.YELLOW;
+		avalibleColors[3] = Color.GREEN;
+		avalibleColors[4] = Color.GRAY;
+		this.color.add(avalibleColors[random.nextInt(5)]);
+		invalidate();
+		return points_x.size() - 1;
+	}
+
+	public void makePointBigger(int number, float radius) {
+		if (number >= this.radius.size() - 1) {
+			Log.i("moje", radius + "|");
+			this.radius.set(0, radius);
+//			this.radius.set(0, (float) 50);
+			this.invalidate();
+			this.requestLayout();
+			this.refreshDrawableState();
+		}
+	}
+
+	public void movePoint(int number, float x, float y) {
+		if (number >= this.radius.size() - 1) {
+			this.points_x.set(number, (int) x);
+			this.points_y.set(number, (int) y);
+			invalidate();
+		}
+	}
+
+	public void setEnd(long l, int number, Activity activity) {
+		this.time.add(l);
+		
+		SharedPreferences preferences = activity.getSharedPreferences("Circles2", Activity.MODE_WORLD_WRITEABLE);
+		Editor edit = preferences.edit();
+		edit.putInt("size", number);
+		edit.putInt("x_" + number, (int) this.points_x.get(number));
+		edit.putInt("y_" + number, (int) this.points_y.get(number));
+		edit.putInt("color_" + number, this.color.get(number));
+		edit.putFloat("radius_" + number, this.radius.get(number));
+		edit.commit();
+		
+		Log.i("moje", "abc-" + preferences.getInt("size", -1) + "");
+	}
+
+	
+}

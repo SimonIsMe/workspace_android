@@ -1,0 +1,124 @@
+package com.example.lista3;
+
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.TextView;
+
+public class Blutooth extends Activity {
+	static public TextView bluetoothTitle;
+
+	public static final String NEW_MSG = "com.example.lista3.NEW_MSG";
+	private SampleReceiver myReceiver;
+	static public MenuItem onOff;
+	static public MenuItem refresh;
+	static public TextView[] name;
+	static public TextView[] address;
+
+	public static final int MAX_DEVICES = 4;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.blutooth);
+
+		this.createLayoutReferences();
+		this.myReceiver = new SampleReceiver();
+
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+		intentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+		intentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
+		intentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+		registerReceiver(this.myReceiver, intentFilter);
+
+		this.startService(new Intent(this, BluetoothService.class));
+
+		BluetoothService.checkBluetoothState();
+	}
+
+	/**
+	 * Tworzy referencje do layoutu
+	 * @param void
+	 * @return void 
+	 * */
+	private void createLayoutReferences() {
+		this.bluetoothTitle = 
+				(TextView) findViewById(R.id.bluetooth_title);
+
+		this.name = new TextView[4];
+		this.address = new TextView[4];
+
+		this.name[0] = (TextView) findViewById(R.id.name_0);
+		this.name[1] = (TextView) findViewById(R.id.name_1);
+		this.name[2] = (TextView) findViewById(R.id.name_2);
+		this.name[3] = (TextView) findViewById(R.id.name_3);
+		this.address[0] = (TextView) findViewById(R.id.address_0);
+		this.address[1] = (TextView) findViewById(R.id.address_1);
+		this.address[2] = (TextView) findViewById(R.id.address_2);
+		this.address[3] = (TextView) findViewById(R.id.address_3);
+	}
+
+	/**Obsługa zdarzeń na naciśnięcia w menu
+	 * @param MenuItem item
+	 * @return boolean
+	 * */
+	public boolean onOptionsItemSelected(MenuItem item) {
+		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
+				.getDefaultAdapter();
+		switch (item.getItemId()) {
+		case R.id.menu_bluetooth_on_off:
+			if (mBluetoothAdapter.isEnabled()) {
+				mBluetoothAdapter.disable();
+			} else {
+				mBluetoothAdapter.enable();
+			}
+			break;
+		case R.id.menu_bluetooth_refresh:
+			BluetoothService.checkBluetoothState();
+			break;
+		case R.id.menu_switch_on_wifi:
+			Intent myIntent = 
+				new Intent(getApplicationContext(), WiFi.class);
+			startActivityForResult(myIntent, 0);
+			finish();
+			break;
+		default:
+			break;
+		}
+		return true;
+	}
+
+	/**Inicjacja zmiennych wskazujących na pozycje w menu
+	 * @param Menu menu
+	 * @return boolean
+	 * */
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.blutooth, menu);
+		this.onOff = menu.getItem(0);
+		this.refresh = menu.getItem(1);
+		return true;
+	}
+}
+
+class SampleReceiver extends BroadcastReceiver {
+
+	public void onReceive(Context context, Intent intent) {
+		String action = intent.getAction();
+        BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+        Log.i("moje", action);
+        Log.i("moje", action.equals("android.bluetooth.device.action.ACL_CONNECTED") + "");
+        Log.i("moje", action.equals("android.bluetooth.device.action.ACL_DISCONNECTED"));
+//		BluetoothAdapter.ACTION_ACL_CONNECTED.equals(action);
+		
+		BluetoothService.checkBluetoothState();
+	}
+}

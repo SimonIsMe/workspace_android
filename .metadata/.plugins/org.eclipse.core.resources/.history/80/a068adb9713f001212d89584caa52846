@@ -1,0 +1,25 @@
+package com.example.circles;
+
+import android.R;
+import android.os.Bundle;
+import android.app.Activity;
+import android.graphics.drawable.Drawable;
+import android.view.Menu;
+
+public class MainActivity extends Activity {
+
+	private Drawable canvas;
+	
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+//        canvas = (Drawable) findViewById(R.id.canvas);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
+}

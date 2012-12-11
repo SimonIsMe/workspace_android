@@ -11,15 +11,18 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.AvoidXfermode.Mode;
 import android.util.Log;
 import android.view.View;
 
 public class Draw2d extends View {
 
-	private ArrayList<Integer> points_x;
-	private ArrayList<Integer> points_y;
-	private ArrayList<Float> radius;
-	private ArrayList<Integer> color;
+	public boolean isRead = false;
+	
+	public ArrayList<Integer> points_x;
+	public ArrayList<Integer> points_y;
+	public ArrayList<Float> radius;
+	public ArrayList<Integer> color;
 	private ArrayList<Long> time;
 	public boolean stop = false;
 	
@@ -30,34 +33,39 @@ public class Draw2d extends View {
         this.radius = new ArrayList<Float>();
         this.color = new ArrayList<Integer>();
         this.time = new ArrayList<Long>();
-        this.load(context);
-	}
-
-	private void load(Context context) {
-		SharedPreferences preferences = context.getSharedPreferences("Circles2", 0);
-		Log.i("moje", preferences.contains("Circles2") + "");
-		Log.i("moje", preferences.contains("size") + "");
-		
-		int size = preferences.getInt("size", -1);
-		Log.i("moje", size + "");		
-	}
+    }
 	
     @SuppressLint("DrawAllocation")
 	protected void onDraw(Canvas c){
+    	
+    	Log.i("moje", "onDraw()");
+    	
     	Paint paint = new Paint();
     	paint.setStyle(Paint.Style.FILL);
 
     	// make the entire canvas white
     	paint.setColor(Color.WHITE);
     	c.drawPaint(paint);
+    	String text = "";
     	
     	for (int i = 0; i < points_x.size(); i++) {
     		paint.setColor(this.color.get(i));
     		c.drawCircle(this.points_x.get(i), this.points_y.get(i), this.radius.get(i), paint);
+    		paint.setColor(Color.BLACK);
+    		
+    		if (!this.isRead) { 
+	    		text = this.points_x.get(i) + "x" + this.points_y.get(i);
+	    		c.drawText(text, this.points_x.get(i), this.points_y.get(i), paint);
+    		}
     	}
     	
 	  	super.onDraw(c);
 	}
+    
+    public void invalidate() {
+    	Log.i("moje", "refresh");
+    	super.invalidate();
+    }
 
 	public int addPoint(float x, float y) {
 		points_x.add((int) x);
@@ -76,14 +84,11 @@ public class Draw2d extends View {
 		return points_x.size() - 1;
 	}
 
-	public void makePointBigger(int number) {
+	public void makePointBigger(int number, float radius) {
 		if (number >= this.radius.size() - 1) {
-			int i = 1;
-			while(!this.stop) {
-				this.radius.set(number, (float) (10.01 * i));
-				i++;
-				invalidate();
-			}
+			Log.i("moje", radius + "|");
+			this.radius.set(0, radius);
+			this.invalidate();
 		}
 	}
 
@@ -98,13 +103,15 @@ public class Draw2d extends View {
 	public void setEnd(long l, int number, Activity activity) {
 		this.time.add(l);
 		
-		SharedPreferences preferences = activity.getSharedPreferences("Circles", Activity.MODE_WORLD_WRITEABLE);
+		float radius = (float) (0.01 * l + 10);
+		
+		SharedPreferences preferences = activity.getSharedPreferences(MainActivity.SHARED_PREFERENCES, Context.MODE_WORLD_WRITEABLE);
 		Editor edit = preferences.edit();
 		edit.putInt("size", number);
 		edit.putInt("x_" + number, (int) this.points_x.get(number));
 		edit.putInt("y_" + number, (int) this.points_y.get(number));
 		edit.putInt("color_" + number, this.color.get(number));
-		edit.putFloat("radius_" + number, this.radius.get(number));
+		edit.putFloat("radius_" + number, radius);
 		edit.commit();
 	}
 

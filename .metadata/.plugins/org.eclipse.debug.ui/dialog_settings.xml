@@ -3,8 +3,8 @@
 	<section name="BreadcrumbItemDropDown">
 	</section>
 	<section name="org.eclipse.debug.ui.SELECT_LAUNCH_SHORTCUT_DIALOG">
-		<item value="261" key="DIALOG_WIDTH"/>
-		<item value="438" key="DIALOG_HEIGHT"/>
+		<item value="263" key="DIALOG_WIDTH"/>
+		<item value="443" key="DIALOG_HEIGHT"/>
 		<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 	</section>
 </section>

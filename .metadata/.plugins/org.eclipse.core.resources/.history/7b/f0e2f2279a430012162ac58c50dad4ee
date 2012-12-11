@@ -1,0 +1,48 @@
+package com.example.lista5;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.TextView;
+
+public class PeopleList extends Activity {
+
+	private static final int MAX = 3;
+	
+	private TextView[] fullNames;
+	private TextView[] dates;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_people_list);
+
+		this.fullNames = new  TextView[MAX];
+		this.dates = new  TextView[MAX];
+		
+		for (int i = 0; i < MAX; i++) {
+			
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.activity_people_list, menu);
+		return true;
+	}
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			 case R.id.item1:
+				 Intent myIntent = new Intent(this.getApplicationContext(), AddNewPerson.class);
+	             startActivityForResult(myIntent, 0);
+				 break;
+		}
+		
+		return true;
+	}
+
+}

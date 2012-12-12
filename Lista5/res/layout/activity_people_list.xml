@@ -4,6 +4,10 @@
     android:layout_height="fill_parent"
     tools:context=".PeopleList" >
 
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    
     <TableLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -120,5 +124,7 @@
 
         </TableRow>
     </TableLayout>
+    
+    </ScrollView>
 
 </RelativeLayout>

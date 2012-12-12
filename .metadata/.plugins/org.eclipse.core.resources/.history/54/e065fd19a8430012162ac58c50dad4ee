@@ -1,0 +1,71 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".Person" >
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    
+    <TableLayout
+        
+        android:layout_margin="20dp" >
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:gravity="center" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Imię nazwisko"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp" >
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut blandit nibh eget nisi vulputate vel condimentum arcu pharetra. Fusce pulvinar nisl in justo placerat egestas. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam sagittis imperdiet dolor vitae malesuada. Integer augue leo, sagittis in aliquet in, vehicula mollis enim. Aliquam feugiat, urna non consectetur pellentesque, nibh elit blandit turpis, quis consequat nunc ligula vitae dui. Maecenas eleifend placerat nisl in auctor. In quis erat quam."
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/TextView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut blandit nibh eget nisi vulputate vel condimentum arcu pharetra. Fusce pulvinar nisl in justo placerat egestas. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam sagittis imperdiet dolor vitae malesuada. Integer augue leo, sagittis in aliquet in, vehicula mollis enim. Aliquam feugiat, urna non consectetur pellentesque, nibh elit blandit turpis, quis consequat nunc ligula vitae dui. Maecenas eleifend placerat nisl in auctor. In quis erat quam."
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+        </TableRow>
+    </TableLayout>
+    
+    </ScrollView>
+
+</RelativeLayout>

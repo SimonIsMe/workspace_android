@@ -1,0 +1,67 @@
+package com.example.lista5;
+
+import android.app.Activity;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class AddNewNote extends Activity {
+
+	private TextView note;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_add_new_note);
+		
+		TextView fullName = (TextView) this.findViewById(R.id.fullName);
+		fullName.setText(PeopleList.fullName);
+		this.note = (TextView) this.findViewById(R.id.note);
+		
+		if (Person.noteId > 0) {
+			SQLiteDatabase db = openOrCreateDatabase("baza" , SQLiteDatabase.CREATE_IF_NECESSARY, null);
+			Cursor c = db.query("notes", null, "nid=" + Person.noteId, null, null, null, null);
+			
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.activity_add_new_note, menu);
+		return true;
+	}
+	
+	public void save(View v) {
+		boolean isError = false;
+		String text = null;
+		
+		if (this.note.getText().toString().equals("")) {
+			text = "The content is required.";
+			isError = true;
+		}
+		
+		if(text == null) {
+			SQLiteDatabase db = openOrCreateDatabase("baza" , SQLiteDatabase.CREATE_IF_NECESSARY, null);
+			ContentValues values = new ContentValues();
+			values.put("text", this.note.getText().toString());
+			values.put("pid", PeopleList.userId);
+			db.insert("notes", null, values);
+			text = "Saved";
+		}
+		
+		Toast.makeText(this.getApplicationContext(), text, Toast.LENGTH_LONG).show();
+		
+		if (!isError) {
+			finish();
+		}
+		
+		
+	}
+
+}

@@ -2,19 +2,28 @@ package com.example.lista5;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.TextView;
 
-public class PeopleList extends Activity {
+public class PeopleList extends Activity implements OnTouchListener {
 
 	private static final int MAX = 3;
 	
+	private int[] ids;
 	private TextView[] fullNames;
 	private TextView[] dates;
+	
+	public static int userId;
+	public static String fullName;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +32,11 @@ public class PeopleList extends Activity {
 
 		this.fullNames = new  TextView[MAX];
 		this.dates = new  TextView[MAX];
-		
+	}
+	
+	protected void onResume(){
+		super.onResume();
+		Log.i("moje", "onResume");
 		this.fullNames[0] = (TextView) this.findViewById(R.id.nameFull0);
 		this.fullNames[1] = (TextView) this.findViewById(R.id.nameFull1);
 		this.fullNames[2] = (TextView) this.findViewById(R.id.nameFull2);
@@ -31,9 +44,11 @@ public class PeopleList extends Activity {
 		this.dates[0] = (TextView) this.findViewById(R.id.date0);
 		this.dates[1] = (TextView) this.findViewById(R.id.date1);
 		this.dates[2] = (TextView) this.findViewById(R.id.date2);
+		this.ids = new int[MAX];
 		
 		for (int i = 0; i < MAX; i++) {
 			this.fullNames[i].setVisibility(View.GONE);
+			this.fullNames[i].setOnTouchListener(this);
 			this.dates[i].setVisibility(View.GONE);
 		}
 		
@@ -47,7 +62,27 @@ public class PeopleList extends Activity {
 				"birth TEXT" +
 				")");
 		
-		Cursor cursor = db.
+		db.execSQL("CREATE TABLE IF NOT EXISTS notes" +
+				"(" +
+				"nid INTEGER PRIMARY KEY," +
+				"text TEXT," +
+				"pid INTEGER" +
+				")");
+		
+		Cursor cursor = db.query("people", null, null, null, null, null, null);
+		
+		int i = 0;
+		while (cursor.moveToNext()) {
+			Log.i("moje", cursor.getString(0) + " " + cursor.getString(1) + " " + cursor.getString(2) + " " + cursor.getString(3));
+			this.ids[i] = Integer.parseInt(cursor.getString(0));
+			this.fullNames[i].setText(cursor.getString(1) + " " + cursor.getString(2));
+			this.dates[i].setText(cursor.getString(3));
+			this.fullNames[i].setVisibility(View.VISIBLE);
+			this.dates[i].setVisibility(View.VISIBLE);
+			i++;
+		}
+		
+		db.close();
 	}
 
 	@Override
@@ -68,4 +103,18 @@ public class PeopleList extends Activity {
 		return true;
 	}
 
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		for (int  i = 0; i < this.fullNames.length; i++) {
+			if (this.fullNames[i].getId() == v.getId()) {
+				this.userId = this.ids[i];
+				this.fullName = this.fullNames[i].getText().toString();
+				Intent myIntent = new Intent(this.getApplicationContext(), Person.class);
+	            startActivityForResult(myIntent, 0);
+			}
+		}
+		return false;
+	}
+	
+	
 }

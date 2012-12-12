@@ -29,7 +29,7 @@ public class Draw2d extends View {
 	public Draw2d(Context context) {
         super(context);
         this.points_x = new ArrayList<Integer>();
-        this.points_y = new ArrayList<Integer>();
+        this.points_y = new ArrayList<Integer>();	
         this.radius = new ArrayList<Float>();
         this.color = new ArrayList<Integer>();
         this.time = new ArrayList<Long>();
